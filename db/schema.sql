@@ -1,4 +1,4 @@
-\c yelp_db
+-- \c yelp_db
 
 DROP TABLE IF EXISTS yelp_reviews;
 

@@ -1,4 +1,4 @@
-\c yelp_db
+-- \c yelp_db
 
 INSERT INTO yelp_reviews (rest_id, rev_text) 
 VALUES 
