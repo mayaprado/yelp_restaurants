@@ -3,25 +3,20 @@ const db = require('../db/index.js');
 
 const restaurants = {};
 
+var reviews = [];
 
-function findReviews(arr) {
-  var reviews = [];
-  arr.map(el => {
-    db
-      .any('SELECT * FROM yelp_reviews WHERE rest_id = ${id};', { id: el['id'] })
-      .then(data => {
-        data = data.map(el => {
-          return {"id": el['id'],
-          "text": el['rev_text']}
-        });
-        reviews.push(data);
-        console.log('reviews are', reviews);
-      })
-      .catch(error => {
-        console.log('error encountered in events.allEvents. Error:', error);
-      });
+findReviews();
+
+function findReviews() {
+  db
+    .many('SELECT * FROM yelp_reviews')
+    .then(data => {
+      reviews = data;
+      console.log(reviews);
+    })
+    .catch(error => {
+      console.log('error encountered in findReviews. Error:', error);
     });
-  return reviews;
 }
 
 restaurants.findBrunch = (req, res, next) => {
@@ -33,7 +28,30 @@ restaurants.findBrunch = (req, res, next) => {
     }
   })
     .then(response => {
-      res.locals.brunch = response.data.businesses;
+      var results = response.data.businesses;
+      for (var i = 0; i <results.length; i++) {
+        var datum = reviews.filter(el => el['rest_id'] === results[i]['id']);
+        console.log('datum is', datum);
+        results[i] = {
+          "id": results[i]["id"],
+          "name": results[i]["name"],
+          "image_url": results[i]["image_url"],
+          "url": results[i]["url"],
+          "categories": results[i]["categories"],
+          "rating": results[i]["rating"],
+          "transactions": results[i]["transactions"],
+          "price": results[i]["price"],
+          "location": results[i]["location"],
+          "phone": results[i]["phone"],
+          "display_phone": results[i]["display_phone"],
+          "distance": results[i]["distance"], 
+          "reviews": datum, 
+           "hours": results[i]["hours"],
+          "hours_type": results[i]["hours_type"],
+          "is_open_now": results[i]["is_open_now"]
+          };        
+        }
+      res.locals.brunch = results;
       next();
     })
     .catch(error => {
@@ -52,8 +70,29 @@ restaurants.findCocktail = (req, res, next) => {
   })
     .then(response => {
       var results = response.data.businesses;
-      res.locals.cocktail = response.data.businesses;
-      res.locals.reviews = findReviews(results);
+      for (var i = 0; i <results.length; i++) {
+        var datum = reviews.filter(el => el['rest_id'] === results[i]['id']);
+        console.log('datum is', datum);
+        results[i] = {
+          "id": results[i]["id"],
+          "name": results[i]["name"],
+          "image_url": results[i]["image_url"],
+          "url": results[i]["url"],
+          "categories": results[i]["categories"],
+          "rating": results[i]["rating"],
+          "transactions": results[i]["transactions"],
+          "price": results[i]["price"],
+          "location": results[i]["location"],
+          "phone": results[i]["phone"],
+          "display_phone": results[i]["display_phone"],
+          "distance": results[i]["distance"], 
+          "reviews": datum, 
+           "hours": results[i]["hours"],
+          "hours_type": results[i]["hours_type"],
+          "is_open_now": results[i]["is_open_now"]
+          };        
+        }
+      res.locals.cocktail = results;
       next();
     })
     .catch(error => {
@@ -71,7 +110,30 @@ restaurants.findMexican = (req, res, next) => {
     }
   })
     .then(response => {
-      res.locals.mexican = response.data.businesses;
+      var results = response.data.businesses;
+      for (var i = 0; i <results.length; i++) {
+        var datum = reviews.filter(el => el['rest_id'] === results[i]['id']);
+        console.log('datum is', datum);
+        results[i] = {
+          "id": results[i]["id"],
+          "name": results[i]["name"],
+          "image_url": results[i]["image_url"],
+          "url": results[i]["url"],
+          "categories": results[i]["categories"],
+          "rating": results[i]["rating"],
+          "transactions": results[i]["transactions"],
+          "price": results[i]["price"],
+          "location": results[i]["location"],
+          "phone": results[i]["phone"],
+          "display_phone": results[i]["display_phone"],
+          "distance": results[i]["distance"], 
+          "reviews": datum, 
+           "hours": results[i]["hours"],
+          "hours_type": results[i]["hours_type"],
+          "is_open_now": results[i]["is_open_now"]
+          };        
+        }
+      res.locals.mexican = results;
       next();
     })
     .catch(error => {
@@ -79,7 +141,5 @@ restaurants.findMexican = (req, res, next) => {
       next(error);
     });
 };
-
-
 
 module.exports = restaurants;
