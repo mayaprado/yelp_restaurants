@@ -6,7 +6,7 @@ router.get('/brunch', restaurants.findBrunch, (req, res) => {
 });
 
 router.get('/cocktail', restaurants.findCocktail, (req, res) => {
-  res.json(res.locals.cocktail);
+  res.json({"restaurants": res.locals.cocktail, "reviews": res.locals.reviews});
 });
 
 router.get('/mexican', restaurants.findMexican, (req, res) => {

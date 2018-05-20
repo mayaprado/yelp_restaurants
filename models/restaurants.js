@@ -3,13 +3,17 @@ const db = require('../db/index.js');
 
 const restaurants = {};
 
+
 function findReviews(arr) {
   var reviews = [];
   arr.map(el => {
     db
       .any('SELECT * FROM yelp_reviews WHERE rest_id = ${id};', { id: el['id'] })
       .then(data => {
-        data = data.map(el => el['rev_text']);
+        data = data.map(el => {
+          return {"id": el['id'],
+          "text": el['rev_text']}
+        });
         reviews.push(data);
         console.log('reviews are', reviews);
       })
@@ -17,7 +21,7 @@ function findReviews(arr) {
         console.log('error encountered in events.allEvents. Error:', error);
       });
     });
-  
+  return reviews;
 }
 
 restaurants.findBrunch = (req, res, next) => {
@@ -48,7 +52,8 @@ restaurants.findCocktail = (req, res, next) => {
   })
     .then(response => {
       var results = response.data.businesses;
-      res.locals.cocktail = findReviews(results);
+      res.locals.cocktail = response.data.businesses;
+      res.locals.reviews = findReviews(results);
       next();
     })
     .catch(error => {
@@ -71,23 +76,6 @@ restaurants.findMexican = (req, res, next) => {
     })
     .catch(error => {
       console.log('error encountered in restaurants.findMexican, error: ', error);
-      next(error);
-    });
-};
-
-restaurants.addBook = (req, res, next) => {
-  const keyword = req.body.keyword;
-  axios({
-    method: 'get',
-    url: `https://www.googleapis.com/books/v1/volumes?q=${keyword}`
-  })
-    .then(response => {
-      res.locals.books = response.data.items;
-      console.log('response: ', response.data.items);
-      next();
-    })
-    .catch(error => {
-      console.log('error encountered in events.addBook error: ', error);
       next(error);
     });
 };
