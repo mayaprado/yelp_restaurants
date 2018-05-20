@@ -22,7 +22,7 @@ function findReviews() {
 restaurants.findBrunch = (req, res, next) => {
   axios({
     method: 'get',
-    url: `http://api.yelp.com/v3/businesses/search?term=brunch&location===Upper West Side, Manhattan, New York,usa&limit=5`,
+    url: `http://api.yelp.com/v3/businesses/search?term=brunch&location===Upper West Side, Manhattan, New York,usa&limit=3`,
     headers: {
       Authorization: `Bearer ${process.env.YELP_KEY}`
     }
@@ -63,7 +63,7 @@ restaurants.findBrunch = (req, res, next) => {
 restaurants.findCocktail = (req, res, next) => {
   axios({
     method: 'get',
-    url: `http://api.yelp.com/v3/businesses/search?term=cocktail bars&location===West Village, Manhattan, New York,usa&limit=5`,
+    url: `http://api.yelp.com/v3/businesses/search?term=cocktail bars&location===West Village, Manhattan, New York,usa&limit=3`,
     headers: {
       Authorization: `Bearer ${process.env.YELP_KEY}`
     }
@@ -104,7 +104,7 @@ restaurants.findCocktail = (req, res, next) => {
 restaurants.findMexican = (req, res, next) => {
   axios({
     method: 'get',
-    url: `http://api.yelp.com/v3/businesses/search?term=mexican restaurants&location===Hell's Kitchen, Manhattan, New York,usa&limit=5`,
+    url: `http://api.yelp.com/v3/businesses/search?term=mexican restaurants&location===Hell's Kitchen, Manhattan, New York,usa&limit=3`,
     headers: {
       Authorization: `Bearer ${process.env.YELP_KEY}`
     }
