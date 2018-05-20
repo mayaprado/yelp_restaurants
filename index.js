@@ -30,10 +30,6 @@ const restaurantsRouter = require('./controllers/restaurants.js');
 
 app.use('/restaurants', restaurantsRouter);
 
-app.get('/*', (req, res) => {
-  res.sendFile(path.join(__dirname+'/public/build/index.html'));
-});
-
 app.use((err, req, res, next) => {
   console.log('Error encountered:', err);
   res.status(500);

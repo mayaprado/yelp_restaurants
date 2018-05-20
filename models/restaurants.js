@@ -3,6 +3,23 @@ const db = require('../db/index.js');
 
 const restaurants = {};
 
+function findReviews(arr) {
+  var reviews = [];
+  arr.map(el => {
+    db
+      .any('SELECT * FROM yelp_reviews WHERE rest_id = ${id};', { id: el['id'] })
+      .then(data => {
+        data = data.map(el => el['rev_text']);
+        reviews.push(data);
+        console.log('reviews are', reviews);
+      })
+      .catch(error => {
+        console.log('error encountered in events.allEvents. Error:', error);
+      });
+    });
+  
+}
+
 restaurants.findBrunch = (req, res, next) => {
   axios({
     method: 'get',
@@ -30,7 +47,8 @@ restaurants.findCocktail = (req, res, next) => {
     }
   })
     .then(response => {
-      res.locals.cocktail = response.data.businesses;
+      var results = response.data.businesses;
+      res.locals.cocktail = findReviews(results);
       next();
     })
     .catch(error => {
